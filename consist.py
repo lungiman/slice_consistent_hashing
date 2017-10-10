@@ -75,6 +75,8 @@ def add_host_slice( hostname, sliceid):
         return
     #Todo:Add check to remove duplicates
     slice_host[sliceid].append(hostname)
+    host_slice[hostname].append(sliceid)
+    host_weight[hostname] = len(host_slice[hostname])
     ring = slice_list[sliceid]
     ring.add_node(hostname)
     #now that a new host is added into a slice, we need to re weigh all the hash rings
@@ -173,11 +175,27 @@ def test():
         distcount(slice)
 
     #remove hostB
-    print("Removing nodeB")
+    print("Removing nodeB from slice1")
+    #rem_host('nodeB')
+    rem_host_slice('nodeB', 'slice1')
+    for slice in slice_list:
+        print(slice)
+        distcount(slice)
+
+    print("adding nodeB again to slice 1")
+    add_host_slice('nodeB', 'slice1')
+
+    for slice in slice_list:
+        print(slice)
+        distcount(slice)
+
+    #remove hostB
+    print("Removing nodeB completely")
     rem_host('nodeB')
     for slice in slice_list:
         print(slice)
         distcount(slice)
+
     print("removing slice1")
     rem_slice('slice1')
     for slice in slice_list:
